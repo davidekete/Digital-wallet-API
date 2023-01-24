@@ -1,7 +1,8 @@
 const express = require("express");
-const generateWallet  = require("../../utils/generateWallet");
-const Wallet  = require("../models/wallet");
-const findWallet  = require("../../utils/walletExists");
+const generateWallet = require("../../utils/generateWallet");
+const Wallet = require("../models/wallet");
+const findWallet = require("../../utils/walletExists");
+const { isEmail } = require("class-validator");
 
 const router = express.Router();
 
@@ -9,23 +10,27 @@ router.post("/create", async (req, res) => {
   try {
     const { email, balance } = req.body;
 
-    const walletExists = await Wallet.findOne({ where: { email } });
+    if (isEmail(email)) {
+      const walletExists = await Wallet.findOne({ where: { email } });
 
-    if (walletExists != null) {
-      res
-        .status(401)
-        .send({ message: "Wallet already exists", wallet: walletExists });
+      if (walletExists != null) {
+        res
+          .status(401)
+          .send({ message: "Wallet already exists", wallet: walletExists });
+      }
+
+      const walletAddress = generateWallet(email);
+
+      const wallet = await Wallet.create({
+        email,
+        walletAddress,
+        balance,
+      });
+
+      res.status(201).send({ message: "Wallet created suceessfully", wallet });
+    } else {
+      res.status(401).send({ message: "Please enter a valid email" });
     }
-
-    const walletAddress = generateWallet(email);
-
-    const wallet = await Wallet.create({
-      email,
-      walletAddress,
-      balance,
-    });
-
-    res.status(201).send({ message: "Wallet created suceessfully", wallet });
   } catch (error) {
     console.log(error);
   }
@@ -39,12 +44,16 @@ router.post("/debit", async (req, res) => {
 
     const recipientWallet = await findWallet(recipientAddress);
 
-    if (debitWallet === null) {
-      res.status(401).send("Debit Address does not exist");
+    if (debitWallet === null || debitWallet.active === false) {
+      res.status(401).send({ message: "Debit Address does not exist" });
     }
 
-    if (recipientWallet === null) {
-      res.status(401).send("Recipient Address does not exist");
+    if (recipientWallet === null || recipientWallet.active === false) {
+      res.status(401).send({ message: "Recipient Address does not exist" });
+    }
+
+    if (debitAddress === recipientAddress) {
+      res.status(401).send({ message: "Invalid parameters" });
     }
 
     if (amount > debitWallet.balance) {
@@ -53,8 +62,8 @@ router.post("/debit", async (req, res) => {
       debitWallet.balance -= amount;
       await debitWallet.save();
 
-      recipientAddress.balance += amount;
-      await recipientAddress.save();
+      recipientWallet.balance += amount;
+      await recipientWallet.save();
 
       res.status(200).send({
         message: `${amount} sucessfully debited from ${debitWallet.email}`,
@@ -71,11 +80,14 @@ router.post("/credit", async (req, res) => {
 
     const wallet = await findWallet(walletAddress);
 
-    if (wallet === null) {
+    if (wallet === null || wallet.active === false) {
       res.status(401).send({ message: "Wallet Address does not exist" });
     } else {
       wallet.balance += amount;
       wallet.save();
+      res
+        .status(200)
+        .send({ message: `${amount} successfully added to ${walletAddress}` });
     }
   } catch (error) {
     console.log(error);
@@ -126,5 +138,11 @@ router.post("/deactivate", async (req, res) => {
     console.log(error);
   }
 });
+
+// router.get("/allWallets", async (req, res) => {
+//   const wallets = await Wallet.findAll();
+
+//   res.send(wallets);
+// });
 
 module.exports = router;

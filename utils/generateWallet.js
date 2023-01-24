@@ -23,6 +23,4 @@ const generateWallet = function (email) {
   return walletAddress;
 };
 
-// console.log(generateWallet("eketedavid@gmail.com"));
-
 module.exports = generateWallet;

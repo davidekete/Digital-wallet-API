@@ -1,13 +1,11 @@
 const { sq } = require("../config/db");
 const { DataTypes } = require("sequelize");
-const { isEmail } = require("class-validator");
 
 const Wallet = sq.define("wallet", {
   email: {
     type: DataTypes.STRING,
     allowNull: false,
     primaryKey: true,
-    validate: isEmail,
   },
 
   walletAddress: {
