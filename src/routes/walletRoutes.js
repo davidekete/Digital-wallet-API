@@ -1,7 +1,7 @@
 const express = require("express");
-const { generateWallet } = require("../../utils/generateWallet");
-const { Wallet } = require("../models/wallet");
-const { findWallet } = require("../../utils/walletExists");
+const generateWallet  = require("../../utils/generateWallet");
+const Wallet  = require("../models/wallet");
+const findWallet  = require("../../utils/walletExists");
 
 const router = express.Router();
 
@@ -9,7 +9,7 @@ router.post("/create", async (req, res) => {
   try {
     const { email, balance } = req.body;
 
-    const walletExists = await Wallet.fineOne({ where: { email } });
+    const walletExists = await Wallet.findOne({ where: { email } });
 
     if (walletExists != null) {
       res

@@ -11,7 +11,7 @@ const Wallet = sq.define("wallet", {
   },
 
   walletAddress: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.BIGINT,
   },
 
   balance: {
@@ -23,6 +23,10 @@ const Wallet = sq.define("wallet", {
     type: DataTypes.BOOLEAN,
     defaultValue: true,
   },
+});
+
+Wallet.sync().then(() => {
+  console.log("Model synced");
 });
 
 module.exports = Wallet;
