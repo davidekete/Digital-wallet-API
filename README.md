@@ -44,7 +44,7 @@ Parameters:
 
 | Field | Type | Description |
 | --- | --- | --- |
-| email | string | New user’s email address. |
+| email | `string` | New user’s email address. |
 
 Payload example:
 
@@ -82,9 +82,9 @@ Parameters:
 
 | Field | Type | Description |
 | --- | --- | --- |
-| amount | float | The amount to be subtracted from the sender’s account. |
-| debitAddress | walletID | The sender’s wallet address. |
-| recipientAddress | walletID | The receiver’s wallet address. |
+| amount | `float` | The amount to be subtracted from the sender’s account. |
+| debitAddress | `walletID` | The sender’s wallet address. |
+| recipientAddress | `walletID` | The receiver’s wallet address. |
 
 Payload example:
 
@@ -116,8 +116,8 @@ Parameters:
 
 | Field | Type | Description |
 | --- | --- | --- |
-| amount | float | The amount to be added to the recipient’s account. |
-| recipientAddress | walletID | The receiver’s wallet address. |
+| amount | `float` | The amount to be added to the recipient’s account. |
+| recipientAddress | `walletID` | The receiver’s wallet address. |
 
 Payload example:
 
@@ -148,7 +148,7 @@ Parameters:
 
 | Field | Type | Description |
 | --- | --- | --- |
-| walletAddress | walletID | The wallet address to be deactivated. |
+| walletAddress | `walletID` | The wallet address to be deactivated. |
 
 Payload example:
 
@@ -178,7 +178,7 @@ Parameters:
 
 | Field | Type | Description |
 | --- | --- | --- |
-| walletAddress | walletID | The wallet address to be activated. |
+| walletAddress | `walletID` | The wallet address to be activated. |
 
 Payload example:
 
