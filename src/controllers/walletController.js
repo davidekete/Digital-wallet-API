@@ -24,7 +24,7 @@ const createWallet = async (req, res) => {
         balance,
       });
 
-      res.status(201).send({ message: "Wallet created suceessfully", wallet });
+      res.status(201).send({ message: "Wallet created successfully", wallet });
     } else {
       res.status(401).send({ message: "Please enter a valid email" });
     }
@@ -63,7 +63,7 @@ const debitWalletAddress = async (req, res) => {
       await recipientWallet.save();
 
       res.status(200).send({
-        message: `${amount} sucessfully debited from ${debitWallet.email}`,
+        message: `${amount} successfully debited from ${debitWallet.email}`,
       });
     }
   } catch (error) {
