@@ -1,5 +1,9 @@
 const crypto = require("crypto");
-
+/**
+ * @description Generate a wallet address from an email
+ * @param {*} email 
+ * @returns 
+ */
 const generateWallet = function (email) {
   const hash = crypto
     .createHash("sha256", "wallet")
